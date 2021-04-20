@@ -292,11 +292,11 @@ class Grid:
 
 
 
-grille = Grid()
-grille.print_grid()
-#
-print(grille.best_move(1))
-tom = Player(1)
+# grille = Grid()
+# grille.print_grid()
+# #
+# print(grille.best_move(1))
+# tom = Player(1)
 # tom.calculate_points(grille)
 # print(f"Les points de Tomy : {tom.points}")
 # grille.put_pawn((,5), 2)
