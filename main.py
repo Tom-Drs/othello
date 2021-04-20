@@ -9,7 +9,7 @@ def main():
         print("C'est à vous de jouer")
         print("--------------------------------------")
         if grid.best_move(1)[0] != 0:
-            pos = input("Entrez une position pour poser un pion. (int(ligne) + int(colonne) exemple : 00")
+            pos = input("Entrez une position pour poser un pion. ( (int(ligne) + int(colonne) exemple : 00 ) :")
             while grid.player_put_pawn((int(pos[0]), int(pos[1])), 1) is None:
                 print("Position rentrée incorrecte.")
                 pos = input("Entrez une position pour poser un pion.")
