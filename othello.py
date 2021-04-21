@@ -237,12 +237,13 @@ class Grid:
         list_pawns = self.diagonals_lines_of_pawn(position).get(line)
         # print(position[0], position[1], color)
         index_next_pawns = index_next_pawns.index((position[0], position[1], 0))
-        for pawn in list_pawns[index_next_pawns + 1:]:
-            if pawn[2] != color and pawn[2] != 0:
-                pawns_add.append(pawn)
-            elif pawn[2] == color:
+        list_pawns = list_pawns[:index_next_pawns]
+        for pawn in range(len(list_pawns)-1, -1, -1):
+            if list_pawns[pawn][2] != color and list_pawns[pawn][2] != 0:
+                pawns_add.append(list_pawns[pawn])
+            elif list_pawns[pawn][2] == color:
                 return pawns_add
-            elif pawn[2] == 0:
+            elif list_pawns[pawn][2] == 0:
                 return None
 
     def player_put_pawn(self, position, color):
@@ -276,8 +277,8 @@ class Grid:
         """
         best_move_pawns = 0
         best_move_pos = 0
-        for row in range(7):
-            for column in range(7):
+        for row in range(8):
+            for column in range(8):
                 if len(self.can_put((row, column), color)) > best_move_pawns:
                     best_move_pos = (row, column, color)
                     best_move_pawns = len(self.can_put((row, column), color))
@@ -292,7 +293,7 @@ class Grid:
 
 
 
-# grille = Grid()
+grille = Grid()
 # grille.print_grid()
 # #
 # print(grille.best_move(1))
