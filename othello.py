@@ -288,17 +288,3 @@ class Grid:
         # print(best_move_pos)
         return best_move_pawns, best_move_pos
 
-
-
-
-
-
-grille = Grid()
-# grille.print_grid()
-# #
-# print(grille.best_move(1))
-# tom = Player(1)
-# tom.calculate_points(grille)
-# print(f"Les points de Tomy : {tom.points}")
-# grille.put_pawn((,5), 2)
-# print(grille.can_put((5,2),2))
