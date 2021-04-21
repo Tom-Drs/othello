@@ -21,6 +21,7 @@ class Grid:
     def __init__(self):
         self.grid = [[0 for i in range(8)] for i in range(8)]
         self.first_pawns()
+        self.round = 0
 
     def first_pawns(self):
         """Class method for put init 4 pawns on the grid.
@@ -246,16 +247,20 @@ class Grid:
             elif list_pawns[pawn][2] == 0:
                 return None
 
-    def player_put_pawn(self, position, color):
+    def player_put_pawn(self, position):
         """"Class method for a player to place a pawn and flips all pawn's combination.
 
             Args:
                 position (tuple): position of the pawn.
-                color (int): color of the pawn.
             Returns:
                 None: if the pawn cannot be placed.
-.               True: if the pawn has been placed.
+.               True: if the pawn has been placed and increment self.round.
         """
+        if self.round % 2 == 0:
+            color = 1
+        else:
+            color = 2
+
         combination = self.can_put(position, color)
         if len(combination) == 0:
             return None
@@ -264,9 +269,10 @@ class Grid:
             for i in combination:
                 self.put_pawn((i[0], i[1]), color)
         self.print_grid()
+        self.add_round()
         return True
 
-    def best_move(self, color):
+    def best_move(self):
         """Class method for return the best move.
 
             Args:
@@ -275,6 +281,10 @@ class Grid:
                 None: if there isn't any best move.
                 tuple: (number of pawns that the move will return) and (position of the best move).
         """
+        if self.round % 2 == 0:
+            color = 1
+        else:
+            color = 2
         best_move_pawns = 0
         best_move_pos = 0
         for row in range(8):
@@ -288,3 +298,6 @@ class Grid:
         # print(best_move_pos)
         return best_move_pawns, best_move_pos
 
+    def add_round(self):
+        """Class method for increment round."""
+        self.round += 1
