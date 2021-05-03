@@ -299,5 +299,5 @@ class Grid:
         return best_move_pawns, best_move_pos
 
     def add_round(self):
-        """Class method for increment round.azd"""
+        """Class method for increment round."""
         self.round += 1
