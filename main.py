@@ -1,5 +1,5 @@
 import othello
-import random
+
 
 def main():
     bot = othello.Player(2)
