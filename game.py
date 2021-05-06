@@ -1,6 +1,8 @@
-﻿class Player:
-    """Class for create a player.
+from tkinter import *
+from tkinter.ttk import *
 
+class Player:
+    """Class for create a player.
         Args:
             color (int): color of the player.
     """
@@ -11,7 +13,7 @@
 
     def calculate_points(self, grid):
         """Class method for calculating all player points"""
-        self.points = len([x for i in grid.grid for x in i if x == self.color])
+        self.points = len([x for i in grid for x in i if x == self.color])
         return self.points
 
 class Grid:
@@ -33,12 +35,12 @@ class Grid:
 
     def put_pawn(self, position, color):
         """Class method for put a pawn on the grid.
-
             Args:
                 position (tuple) : Square position.
                 color (int) : Color of the pawn.
         """
         self.grid[position[0]][position[1]] = color
+
 
     def print_grid(self):
         """Class method for print the grid.
@@ -77,7 +79,6 @@ class Grid:
 
     def near(self, position):
         """Class method for get all pawns near a position.
-
             Args:
                 position (tuple): Square position.
             Returns:
@@ -132,7 +133,6 @@ class Grid:
 
     def can_put(self, position, color):
         """Class method for return list of pawn's combination on the different axes.
-
             Args:
                 position (tuple): Square position.
                 color (int): Color of the pawn.
@@ -200,7 +200,6 @@ class Grid:
 
     def calculate_pawn_list(self, line, position, color):
         """"Class method for finding the pawns to return in a list.
-
             Args:
                 line (str): line for find pawns (diagonal / horizontal / vertical) - (right / bot)
                 position (tuple): position of the initial pawn.
@@ -248,19 +247,19 @@ class Grid:
                 return None
 
     def player_put_pawn(self, position):
-        """"Class method for a player to place a pawn and flips all pawn's combination.
+        """Class method for a player to place a pawn and flips all pawn's combination.
 
             Args:
                 position (tuple): position of the pawn.
+                color (int): color of the pawn.
             Returns:
                 None: if the pawn cannot be placed.
-.               True: if the pawn has been placed and increment self.round.
+.               True: if the pawn has been placed.
         """
         if self.round % 2 == 0:
-            color = 1
+          color = 1
         else:
-            color = 2
-
+          color = 2
         combination = self.can_put(position, color)
         if len(combination) == 0:
             return None
@@ -268,36 +267,40 @@ class Grid:
             self.put_pawn(position, color)
             for i in combination:
                 self.put_pawn((i[0], i[1]), color)
-        self.print_grid()
         self.add_round()
         return True
 
-    def best_move(self):
+    def best_move(self, color):
         """Class method for return the best move.
-
             Args:
                 color(int): color of the pawn.
             Returns:
                 None: if there isn't any best move.
                 tuple: (number of pawns that the move will return) and (position of the best move).
         """
-        if self.round % 2 == 0:
-            color = 1
-        else:
-            color = 2
         best_move_pawns = 0
         best_move_pos = 0
-        for row in range(8):
-            for column in range(8):
+        for row in range(7):
+            for column in range(7):
                 if len(self.can_put((row, column), color)) > best_move_pawns:
                     best_move_pos = (row, column, color)
                     best_move_pawns = len(self.can_put((row, column), color))
         if best_move_pawns == 0:
             return None
-        # print(best_move_pawns)
-        # print(best_move_pos)
         return best_move_pawns, best_move_pos
-
+    
     def add_round(self):
-        """Class method for increment round."""
+        """Class method to add a round.
+            Return:
+                int: number of round
+        """
         self.round += 1
+        return self.round
+
+    def round(self):
+        return self.round
+
+    def grid(self):
+        return self.grid
+
+
