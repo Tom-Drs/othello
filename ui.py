@@ -21,6 +21,10 @@ class BtnGridUi:
             else:
                 self.btn = BtnGridUi(self.x, self.y, self.white_photo, self.grid_ui, self.grid_game)
 
+            if self.grid_ui.bot and self.grid_game.round() % 2 != 0:
+                # print(super().best_move(2))
+                self.grid_ui.player_put_pawn(self.grid_game.best_move(2)[1])
+
 class OthelloUi(game.Grid):
 
     def __init__(self):
@@ -135,7 +139,7 @@ class OthelloUi(game.Grid):
                 position (tuple): position of the pawn.
                 color (int): color of the pawn.
             Returns:
-                None: if the pawn cannot be placed.
+                False: if the pawn cannot be placed.
 .               True: if the pawn has been placed.
         """
         if super().round() % 2 == 0:
@@ -144,7 +148,7 @@ class OthelloUi(game.Grid):
             color = 2
         combination = super().can_put(position, color)
         if len(combination) == 0:
-            return None
+            return False
         if len(combination) > 0:
             self.put_pawn_ui(position, color)
             for i in combination:
@@ -152,10 +156,6 @@ class OthelloUi(game.Grid):
         super().add_round()
         self.calculate_point_ui()
         self.end_game_ui()
-
-        if self.bot and super().round() % 2 != 0:
-            # print(super().best_move(2))
-            self.player_put_pawn(super().best_move(2)[1])
         return True
 
     def put_pawn_ui(self, position, color):
