@@ -161,12 +161,9 @@ class OthelloUi(game.Grid):
     def put_pawn_ui(self, position, color):
         super().put_pawn(position, color)
         if color == 1:
-          self.round_ui(self.white_photo)
-          BtnGridUi(position[0], position[1], self.black_photo, self, super())
+            self.round_ui(self.white_photo)
+            BtnGridUi(position[0], bot.calculate_points(grid), self.black_photo, self, super())
         else:
-          BtnGridUi(position[0], position[1], self.white_photo, self, super())
-          self.round_ui(self.black_photo)
-
-
-
+            BtnGridUi(position[0], bot.calculate_points(grid), self.white_photo, self, super())
+            self.round_ui(self.black_photo)
 
