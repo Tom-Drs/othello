@@ -44,8 +44,8 @@ class OthelloUi(game.Grid):
         self.window.mainloop()
 
     def grid_ui(self):
-        for x in range (8):
-            for y in range (8):
+        for x in range(8):
+            for y in range(8):
                 BtnGridUi(x, y, self.grid_photo, self, super())
         BtnGridUi(3, 3, self.white_photo, self, super())
         BtnGridUi(3, 4, self.black_photo, self, super())

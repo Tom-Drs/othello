@@ -24,7 +24,7 @@ def matchmaking(data):
     elif data.get("subject") == "game_started":
         print(data.get("grid"))
         ui2.game_start(data)
-        ui2.update_ui(data.get("grid"), data.get("round"))
+        ui2.update_ui(data.get("grid"), data.get("round"), data.get("white_player_points"), data.get("black_player_points"))
 
 
 
@@ -35,7 +35,8 @@ def disconnect():
 @sio.event
 def end_game(data):
     if data.get("subject") == "player_left":
-        print("Game has finished, player has left.")
+        ui2.main_menu()
+
 
 @sio.event
 def put_pawn(data):
@@ -43,7 +44,12 @@ def put_pawn(data):
 
 @sio.event
 def update_grid(data):
-    ui2.update_ui(data.get("grid"), data.get("round"))
+    ui2.update_ui(data.get("grid"), data.get("round"), data.get("white_player_points"), data.get("black_player_points"))
+
+@sio.event
+def finish_game(data):
+    print(data)
+    ui2.end_dashboard(data)
 
 
 class BtnGridUi:
@@ -67,11 +73,7 @@ class OthelloUi:
         self.grid_photo = PhotoImage(file=get_path("grille.pgm"))
         self.white_photo = PhotoImage(file=get_path("pion_blanc.pgm"))
         self.black_photo = PhotoImage(file=get_path("pion_noir.pgm"))
-        self.name_player = StringVar()
-        self.name_player.set("Votre pseudo")
-        Entry(self.window, textvariable=self.name_player, width=15).grid(row=4, column=5, pady=50, padx=150)
-        Button(self.window, text="Rechercher une partie", command=self.launch_matchmaking).grid(row=5, column=5)
-
+        self.main_menu()
         self.window.mainloop()
 
 
@@ -84,7 +86,6 @@ class OthelloUi:
     #     BtnGridUi(4, 3, self.black_photo, self, super())
     #     BtnGridUi(4, 4, self.white_photo, self, super())
 
-
     def destroy_ui(self):
         for widget in self.window.winfo_children():
             widget.destroy()
@@ -96,12 +97,7 @@ class OthelloUi:
         self.destroy_ui()
         Label(self.window, text="Veuillez patienter, nous recherchons un adversaire").pack()
 
-    def update_ui(self, grid, round):
-
-        # for row in grid:
-        #     for pawn in row:
-        #         print(f" {grid.index(row)} , {row.index(pawn)}")
-        #         BtnGridUi(grid.index(row), row.index(pawn), PhotoImage(file=r"grille.pgm"))
+    def update_ui(self, grid, round, white_points, black_points):
         for x in range(8):
             for y in range(8):
                 if grid[x][y] == 0:
@@ -116,9 +112,8 @@ class OthelloUi:
             Label(self.window, image=self.black_photo).grid(row=0, column=10)
         else:
             Label(self.window, image=self.white_photo).grid(row=0, column=10)
-        self.point_player1.set(self.calculate_points(super().grid()))
-        self.point_player2.set(self.calculate_points(super().grid()))
-
+        self.black_points.set(black_points)
+        self.white_points.set(white_points)
 
     def game_start(self, data):
         self.destroy_ui()
@@ -127,27 +122,52 @@ class OthelloUi:
 
         Label(self.window, text=player1.get_alias()).grid(row=4, column=10)
         Label(self.window, text=player2.get_alias()).grid(row=5, column=10)
+        self.white_points = StringVar()
+        self.white_points.set("2")
+        self.black_points = StringVar()
+        self.black_points.set("2")
+        print(self.black_points)
 
         if player1.get_color() == 1:
             Label(self.window, image=self.black_photo).grid(row=4, column=9)
             Label(self.window, image=self.white_photo).grid(row=5, column=9)
+
+            Label(self.window, textvariable=self.black_points).grid(row=4, column=8)
+            Label(self.window, textvariable=self.white_points).grid(row=5, column=8)
         else:
             Label(self.window, image=self.white_photo).grid(row=4, column=9)
             Label(self.window, image=self.black_photo).grid(row=5, column=9)
-        self.point_player1 = StringVar()
-        self.point_player1.set("2")
-        Label(self.window, textvariable=self.point_player1).grid(row=4, column=8)
-        self.point_player2 = StringVar()
-        self.point_player2.set("2")
-        Label(self.window, textvariable=self.point_player2).grid(row=5, column=8)
+
+            Label(self.window, textvariable=self.black_points).grid(row=5, column=8)
+            Label(self.window, textvariable=self.white_points).grid(row=4, column=8)
+
+
+
+    def main_menu(self):
+        self.destroy_ui()
+        self.name_player = StringVar()
+        self.name_player.set("Votre pseudo")
+        Entry(self.window, textvariable=self.name_player, width=15).grid(row=4, column=5, pady=50, padx=150)
+        Button(self.window, text="Rechercher une partie", command=self.launch_matchmaking).grid(row=5, column=5)
+
+    def end_dashboard(self, data):
+        self.destroy_ui()
+        self.end = StringVar()
+        self.end.set(data.get("winner"))
+        self.destroy_ui()
+        Label(self.window, textvariable=self.end).pack()
+        Button(self.window, text="Menu", command=self.main_menu).pack()
+
+
 
 def get_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
 
+
 if __name__ == "__main__":
-    sio.connect('http://91.167.149.8:5000')
+    sio.connect('http://othello.tomyserver.fr:5000')
     ui = OthelloUi()
 
 
